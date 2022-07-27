@@ -1,0 +1,21 @@
+acl SSL_ports port 443
+acl Safe_ports port 80 # http
+acl Safe_ports port 21 # ftp
+acl Safe_ports port 443 # https
+acl CONNECT method CONNECT
+## Bloqueia acesso de portas nao Safe_ports
+http_access deny !Safe_ports
+
+## Nega CONNECT para outras portas que nao seja SSL ports
+http_access deny CONNECT !SSL_ports
+
+#porta que o squid vai ouvir / Squid listen port
+http_port 3128
+
+#Permitir apenas computadores da minha rede/ only my network is allowed
+acl Minha_Rede src 172.31.1.0/16
+
+http_access allow Minha_Rede
+
+#o resto bloqueia, Block all the rest
+http_access deny all
